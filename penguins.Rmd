@@ -1,0 +1,110 @@
+---
+author: "My website"
+date: "2023-02-12"
+output: html_document
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data
+
+Data being used in this Lab session is of Penguins. Data were collected and made available by `Dr. Kristen Gorman` and the `Palmer Station`, `Antarctica LTER`, a member of the Long Term Ecological Research Network. Here is a picture below of what these penguins in the dataset look like:
+
+![](https://www.gabemednick.com/post/penguin/featured_hu23a2ff6767279debab043a6c8f0a6157_878472_720x0_resize_lanczos_2.png)
+
+Loading the data
+
+```{r}
+#install.packages("palmerpenguins")
+library("palmerpenguins")
+library("tidyverse")
+
+#data(package = 'palmerpenguins')
+
+colnames(penguins)
+
+dim(penguins)
+
+#?penguins
+```
+
+## *The distribution of a single trait*
+
+We shall explore the bill length distribution of Penguins. 
+
+```{r}
+
+penguins %>%
+    ggplot() + 
+  geom_histogram(mapping= aes(x= bill_length_mm,binwidth=5))
+
+ggplot(data = penguins) + 
+  geom_boxplot(mapping= aes(x= bill_length_mm, y= species, color= "red"))
+
+ggplot(data = penguins) + 
+  geom_density (mapping= aes(x= bill_length_mm, fill= species, alpha=0.5))
+
+```
+
+## *The relationship between multiple traits*
+
+Here, we will explore relationships among variables in the penguins data set.
+
+```{r}
+
+penguins %>%
+  ggplot(mapping = aes(x = body_mass_g, y=flipper_length_mm)) +
+  geom_point() +
+  geom_smooth(method="lm")
+
+penguins %>% 
+  ggplot(mapping = aes(x=body_mass_g, y=flipper_length_mm, colour=species)) +
+  geom_smooth(method="lm") 
+
+
+penguins %>%
+  ggplot() + 
+  geom_point(mapping = aes(x=body_mass_g, y=flipper_length_mm, size= species), shape= 10) 
+
+penguins %>%
+  ggplot() + 
+  geom_col(mapping = aes(x= year, y= flipper_length_mm, colour="red")) 
+
+#install.packages("colorspace")
+library(colorspace)
+
+```
+
+
+## The level of sexual dimorphism
+I would like to explore the degree of sexual dimorphism in the 3 groups of penguins, and if this is species specific using the bill and flipper length.
+
+```{r}
+penguins %>%
+  ggplot() +
+  geom_point(mapping = aes(x=body_mass_g, y=bill_depth_mm, colour=sex)) +
+              facet_wrap(~species)
+  
+
+penguins %>%
+  ggplot() +
+  geom_point(mapping = aes(x=body_mass_g, y= flipper_length_mm, colour=sex)) +
+              facet_wrap(~species)
+
+```
+
+## *Free exploration*
+
+Flipper and bill depth/length across years
+
+```{r}
+
+penguins %>%
+  ggplot() +
+geom_point(mapping = aes(x=flipper_length_mm, y=bill_depth_mm))  +
+  facet_wrap(~year) 
+  
+
+
